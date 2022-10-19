@@ -1,0 +1,66 @@
+USE subtes_ba;
+
+CREATE TABLE `lines` (
+  `id` TINYINT(1) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(8) NOT NULL,
+  `color` VARCHAR(8) NOT NULL,
+  `origin` VARCHAR(19) NOT NULL,
+  `destination` VARCHAR(21) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(id)
+) 
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `stations` (
+  `id` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(25) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`)
+) 
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `lines_stations` (
+  `id` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `line_id` TINYINT(1) UNSIGNED NOT NULL,
+  `station_id` TINYINT(3) UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`),
+  CONSTRAINT `line_stations_line_id_foreign`
+  FOREIGN KEY(`line_id`) REFERENCES `lines`(`id`),
+  CONSTRAINT `line_stations_station_id_foreign`
+  FOREIGN KEY(`station_id`) REFERENCES `stations`(`id`)
+)
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `locations` (
+  `id` TINYINT(3) UNSIGNED NOT NULL AUTO_INCREMENT, 
+  `station_id` TINYINT(3) UNSIGNED NOT NULL,
+  `location` POINT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`id`),
+  CONSTRAINT `locations_station_id_foreign`
+  FOREIGN KEY(`station_id`) REFERENCES `stations`(`id`)
+)
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `trains` (
+  `serial_number` VARCHAR(15) NOT NULL, 
+  `line_id` TINYINT(1) UNSIGNED NOT NULL,
+  `type` TINYINT(1) UNSIGNED NOT NULL,
+  `year` INT(4) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`serial_number`),
+  CONSTRAINT `trains_line_id_foreign`
+  FOREIGN KEY(`line_id`) REFERENCES `lines`(`id`)
+)
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
